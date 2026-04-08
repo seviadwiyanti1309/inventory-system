@@ -1,77 +1,90 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-lg mx-auto">
-    <div class="flex items-center gap-3 mb-6">
-        <a href="{{ route('items.index') }}" class="text-gray-400 hover:text-gray-600">← Kembali</a>
-        <h1 class="text-2xl font-bold text-gray-800">Tambah Item</h1>
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+        <a href="{{ route('items.index') }}" class="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1 transition duration-150">
+            ← Kembali ke Daftar Item
+        </a>
+        <h1 class="text-2xl font-bold text-gray-800 mt-2">Tambah Item Baru</h1>
+        <p class="text-gray-500 text-sm italic mt-1">Lengkapi informasi di bawah ini untuk menambahkan barang ke sistem.</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
         <form action="{{ route('items.store') }}" method="POST">
             @csrf
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Item</label>
-                <input type="text" name="name" value="{{ old('name') }}"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"
-                       placeholder="Contoh: Laptop ASUS">
-                @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select name="category_id"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('category_id') border-red-500 @enderror">
-                    <option value="">-- Pilih Category --</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="space-y-6">
+                {{-- Nama Item --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Stok</label>
-                    <input type="number" name="stock" value="{{ old('stock', 0) }}" min="0"
-                           class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('stock') border-red-500 @enderror">
-                    @error('stock') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Item</label>
+                    <input type="text" name="name" id="name" value="{{ old('name') }}" required
+                        placeholder="Contoh: Laptop ASUS Vivobook"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50 @error('name') border-rose-500 @enderror">
+                    @error('name') <p class="text-rose-500 text-xs mt-2 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Category --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Satuan</label>
-                    <input type="text" name="unit" value="{{ old('unit', 'pcs') }}"
-                           class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="pcs, kg, liter...">
+                    <label for="category_id" class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                    <select name="category_id" id="category_id" required 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50 @error('category_id') border-rose-500 @enderror">
+                        <option value="">Pilih Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id') <p class="text-rose-500 text-xs mt-2 font-medium">{{ $message }}</p> @enderror
                 </div>
-            </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
-                <input type="number" name="price" value="{{ old('price') }}" min="0" step="100"
-                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('price') border-red-500 @enderror"
-                       placeholder="0">
-                @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
+                <div class="grid grid-cols-2 gap-6">
+                    {{-- Stok Awal --}}
+                    <div>
+                        <label for="stock" class="block text-sm font-semibold text-gray-700 mb-2">Stok Awal</label>
+                        <input type="number" name="stock" id="stock" value="{{ old('stock', 0) }}" min="0" required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50 @error('stock') border-rose-500 @enderror">
+                        @error('stock') <p class="text-rose-500 text-xs mt-2 font-medium">{{ $message }}</p> @enderror
+                    </div>
 
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (opsional)</label>
-                <textarea name="description" rows="3"
-                          class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Deskripsi item...">{{ old('description') }}</textarea>
-            </div>
+                    {{-- Satuan --}}
+                    <div>
+                        <label for="unit" class="block text-sm font-semibold text-gray-700 mb-2">Satuan</label>
+                        <input type="text" name="unit" id="unit" value="{{ old('unit', 'pcs') }}" required
+                            placeholder="pcs, kg, liter..."
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50">
+                    </div>
+                </div>
 
-            <div class="flex gap-3">
-                <button type="submit"
-                        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                    Simpan
-                </button>
-                <a href="{{ route('items.index') }}"
-                   class="bg-gray-100 text-gray-700 px-6 py-2 rounded hover:bg-gray-200">
-                    Batal
-                </a>
+                {{-- Harga --}}
+                <div>
+                    <label for="price" class="block text-sm font-semibold text-gray-700 mb-2">Harga (Rp)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-gray-400 font-medium">Rp</span>
+                        <input type="number" name="price" id="price" value="{{ old('price') }}" min="0" step="100" required
+                            placeholder="0"
+                            class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50 @error('price') border-rose-500 @enderror">
+                    </div>
+                    @error('price') <p class="text-rose-500 text-xs mt-2 font-medium">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Deskripsi --}}
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi (Opsional)</label>
+                    <textarea name="description" id="description" rows="3" placeholder="Tambahkan informasi detail mengenai barang ini..."
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 bg-gray-50/50">{{ old('description') }}</textarea>
+                </div>
+
+                <div class="pt-6 flex items-center gap-4">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-200 transition duration-200 transform hover:-translate-y-0.5 active:scale-95">
+                        Simpan Item
+                    </button>
+                    <a href="{{ route('items.index') }}" 
+                        class="px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition duration-200">
+                        Batal
+                    </a>
+                </div>
             </div>
         </form>
     </div>

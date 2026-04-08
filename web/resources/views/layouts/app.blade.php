@@ -21,6 +21,10 @@
                    class="text-gray-600 hover:text-blue-600 font-medium {{ request()->routeIs('categories.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
                     Categories
                 </a>
+                <a href="{{ route('transactions.index') }}"
+                   class="text-gray-600 hover:text-blue-600 font-medium {{ request()->routeIs('transactions.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
+                    Transactions
+                </a>
             </div>
         </div>
     </nav>
